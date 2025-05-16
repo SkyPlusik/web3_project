@@ -1,52 +1,60 @@
-import { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import { createContext, useState, useCallback, useEffect } from 'react'
+import axios from 'axios'
 
-export const PokemonContext = createContext();
+export const PokemonContext = createContext()
 
 export const PokemonProvider = ({ children }) => {
-  const [pokemons, setPokemons] = useState([]);
-  const [selectedPokemon, setSelectedPokemon] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [filter, setFilter] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [pokemons, setPokemons] = useState([])
+  const [selectedPokemon, setSelectedPokemon] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [filter, setFilter] = useState('all')
+  const [cache, setCache] = useState({})
 
-  const fetchPokemons = async () => {
-    setLoading(true);
+  const fetchPokemons = useCallback(async () => {
+    setLoading(true)
     try {
-      const { data } = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=50');
+      const { data } = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=50')
       const detailedPokemons = await Promise.all(
         data.results.map(pokemon => axios.get(pokemon.url))
-      );
-      setPokemons(detailedPokemons.map(res => res.data));
+      )
+      setPokemons(detailedPokemons.map(res => res.data))
     } catch (err) {
-      setError(err.message);
+      setError(err.message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }, [])
 
-  const fetchPokemonDetails = async (id) => {
-    setLoading(true);
-    try {
-      const { data } = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
-      setSelectedPokemon(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+  const fetchPokemonDetails = useCallback(async (id) => {
+    if (cache[id]) {
+      setSelectedPokemon(cache[id])
+      return
     }
-  };
+
+    setLoading(true)
+    try {
+      const { data } = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
+      setSelectedPokemon(data)
+      setCache(prev => ({ ...prev, [id]: data }))
+      setError(null)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }, [cache])
 
   useEffect(() => {
-    fetchPokemons();
-  }, []);
+    fetchPokemons()
+  }, [fetchPokemons])
 
   const filteredPokemons = pokemons.filter(pokemon => {
-    const matchesType = filter === 'all' || pokemon.types.some(t => t.type.name === filter);
-    const matchesSearch = pokemon.name.includes(searchTerm.toLowerCase());
-    return matchesType && matchesSearch;
-  });
+    const matchesSearch = pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesType = filter === 'all' || pokemon.types.some(t => t.type.name === filter)
+    return matchesSearch && matchesType
+  })
 
   return (
     <PokemonContext.Provider
@@ -55,14 +63,14 @@ export const PokemonProvider = ({ children }) => {
         selectedPokemon,
         loading,
         error,
-        filter,
         searchTerm,
-        setFilter,
         setSearchTerm,
+        filter,
+        setFilter,
         fetchPokemonDetails
       }}
     >
       {children}
     </PokemonContext.Provider>
-  );
-};
+  )
+}

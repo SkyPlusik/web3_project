@@ -1,13 +1,13 @@
-import { usePokemon } from '../../hooks/usePokemon';
-import PokemonCard from '../PokemonCard';
-import Loading from '../Loading';
-import styles from './styles.module.css';
+import { usePokemon } from '../../hooks/usePokemon'
+import PokemonCard from '../PokemonCard'
+import LoadingSpinner from '../LoadingSpinner'
+import styles from './styles.module.css'
 
 const PokemonList = () => {
-  const { pokemons, loading, error } = usePokemon();
+  const { pokemons, loading, error } = usePokemon()
 
-  if (loading) return <Loading />;
-  if (error) return <div className={styles.error}>{error}</div>;
+  if (loading) return <LoadingSpinner />
+  if (error) return <div className={styles.error}>{error}</div>
 
   return (
     <div className={styles.list}>
@@ -15,7 +15,7 @@ const PokemonList = () => {
         <PokemonCard key={pokemon.id} pokemon={pokemon} />
       ))}
     </div>
-  );
-};
+  )
+}
 
-export default PokemonList;
+export default PokemonList

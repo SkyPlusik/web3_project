@@ -1,7 +1,8 @@
-import SearchBar from '../components/SearchBar';
-import TypeFilter from '../components/TypeFilter';
-import PokemonList from '../components/PokemonList';
-import styles from './Home.module.css';
+import { usePokemon } from '../hooks/usePokemon'
+import SearchBar from '../components/SearchBar'
+import TypeFilter from '../components/TypeFilter'
+import PokemonList from '../components/PokemonList'
+import styles from './Home.module.css'
 
 const Home = () => {
   return (
@@ -11,7 +12,7 @@ const Home = () => {
       <TypeFilter />
       <PokemonList />
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

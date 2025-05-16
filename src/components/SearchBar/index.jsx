@@ -1,8 +1,8 @@
-import { usePokemon } from '../../hooks/usePokemon';
-import styles from './styles.module.css';
+import { usePokemon } from '../../hooks/usePokemon'
+import styles from './styles.module.css'
 
 const SearchBar = () => {
-  const { searchTerm, setSearchTerm } = usePokemon();
+  const { searchTerm, setSearchTerm } = usePokemon()
 
   return (
     <div className={styles.searchContainer}>
@@ -14,7 +14,7 @@ const SearchBar = () => {
         className={styles.searchInput}
       />
     </div>
-  );
-};
+  )
+}
 
-export default SearchBar;
+export default SearchBar

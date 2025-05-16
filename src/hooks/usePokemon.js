@@ -1,10 +1,10 @@
-import { useContext } from 'react';
-import { PokemonContext } from '../contexts/PokemonContext';
+import { useContext } from 'react'
+import { PokemonContext } from '../contexts/PokemonContext'
 
 export const usePokemon = () => {
-  const context = useContext(PokemonContext);
+  const context = useContext(PokemonContext)
   if (!context) {
-    throw new Error('usePokemon must be used within a PokemonProvider');
+    throw new Error('usePokemon must be used within a PokemonProvider')
   }
-  return context;
-};
+  return context
+}

@@ -1,23 +1,22 @@
-import { usePokemon } from '../../hooks/usePokemon';
-import { useNavigate } from 'react-router-dom';
-import styles from './styles.module.css';
+import { Link } from 'react-router-dom'
+import styles from './styles.module.css'
 
 const PokemonCard = ({ pokemon }) => {
-  const { fetchPokemonDetails } = usePokemon();
-  const navigate = useNavigate();
-
-  const handleClick = () => {
-    fetchPokemonDetails(pokemon.id);
-    navigate(`/pokemon/${pokemon.id}`);
-  };
+  const imageUrl = pokemon.sprites?.other?.['official-artwork']?.front_default || 
+                   pokemon.sprites?.front_default
 
   return (
-    <div className={styles.card} onClick={handleClick}>
-      <img 
-        src={pokemon.sprites.other['official-artwork'].front_default} 
-        alt={pokemon.name} 
-        className={styles.image}
-      />
+    <Link to={`/pokemon/${pokemon.id}`} className={styles.card}>
+      <div className={styles.imageContainer}>
+        <img 
+          src={imageUrl} 
+          alt={pokemon.name}
+          className={styles.image}
+          onError={(e) => {
+            e.target.src = 'https://via.placeholder.com/150'
+          }}
+        />
+      </div>
       <h3 className={styles.name}>{pokemon.name}</h3>
       <div className={styles.types}>
         {pokemon.types.map(type => (
@@ -26,8 +25,8 @@ const PokemonCard = ({ pokemon }) => {
           </span>
         ))}
       </div>
-    </div>
-  );
-};
+    </Link>
+  )
+}
 
-export default PokemonCard;
+export default PokemonCard
