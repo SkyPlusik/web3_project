@@ -1,0 +1,14 @@
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.error {
+  color: #e74c3c;
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  grid-column: 1 / -1;
+}
